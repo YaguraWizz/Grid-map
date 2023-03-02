@@ -1,0 +1,78 @@
+extends Node2D
+
+onready var _position = $Position2D.global_position
+var Array_Of_Squares
+var _name1="Box"
+var _name2="Circle"
+var Side_Box:float=32
+var Size_Box:float=32
+var Center
+var min_d
+var radius=10*32
+
+func _ready():
+	print("_ready() ")
+	var temp=load("res://new_script.gd")
+	var net= temp.new(_name1,_position,Size_Box*Side_Box,Size_Box*Side_Box,Size_Box)
+	add_child(net) 
+	Array_Of_Squares=net.get_Array_Of_Squares()
+	Center=net.get_Center_Circle()
+	print("net.get_Array_Of_Squares() ",net.get_Array_Of_Squares().size())
+	print("Array_Of_Squares ",Array_Of_Squares.size())
+	
+	min_d=Size_Box/2
+	set_color()
+
+func set_color():
+	if Array_Of_Squares==null:
+		print("Array_Of_Squares==null")
+		return
+	var _Control=preload("res://Grid.tscn")
+	var x1=8
+	var x2=16
+	for i in range(Array_Of_Squares.size()):
+		if i>2:
+			print(Array_Of_Squares[0].get_Center_Square().distance_to(Array_Of_Squares[1].get_Center_Square()))
+		var _Color =_Control.instance()
+		_Color.set_global_position(Array_Of_Squares[i].get_Center_Square())
+		_Color._size(Vector2(Size_Box/2,Size_Box/2))
+		#_Color._text(i)
+		_Color._color(resolve_color_Circle(Array_Of_Squares[i].get_Center_Square()))
+		add_child(_Color) 
+
+
+func resolve_color_Circle(Vec:Vector2)->Color:
+	var x
+	var y
+	var temp:Color=Color(0,0,0,1)
+	
+	for i in range(Center.y-radius+Size_Box/2,Center.y+radius+Size_Box/2,Size_Box):
+		for j in range(Center.x-radius+Size_Box/2,Center.x+radius+Size_Box/2,Size_Box):
+			if Center.distance_to(Vector2(i,j))<radius:
+				if i==Vec.x and j==Vec.y:
+					temp=Color(1,0,1,1)
+	return temp
+
+
+
+
+
+
+func resolve_color_box(i, row_length):
+	if row_length%2 == 0 and i/row_length%2 == 1: #четная длина ряда
+		if i%2 == 0:
+			return Color(0,0,0,1)
+		else:
+			return Color(1,1,1,1)
+	else:
+		return Color(1-i%2, 1-i%2, 1-i%2, 1)
+
+
+
+func update_region()->Array:
+	var point:Array
+	
+	
+	return point
+
+
