@@ -1,0 +1,111 @@
+extends Node
+class_name Grid
+
+export var Start_Coordinates:Vector2
+export var Length:float
+export var Height:float
+export var Side:float
+export var Array_Of_Squares:Array
+export var _name_Figure:String
+export var Radius:float
+
+
+func _init(_name:String,_Start_Coordinates:Vector2,_Length:float,_Height:float,_Side:float):
+	_name_Figure=_name
+	Start_Coordinates=_Start_Coordinates
+	Length=_Length
+	Height=_Height
+	Side=_Side
+	set_Array_Of_Squares()
+	get_Center_Circle()
+#-----class Square---------------------------------------------
+class Square:
+	var Start_Coordinates_Square:Vector2
+	var Side_Box:float
+	var Point_Array:Array
+	var Center_Square:Vector2
+#----------_init------------------------------
+	func _init(_Start_Coordinates_Square:Vector2,_Side_Box:float):
+		Start_Coordinates_Square=_Start_Coordinates_Square
+		Side_Box=_Side_Box
+		#set_Point_Array()
+		set_Center_Square()
+#---------------------------------------------
+
+
+#--------set_Point_Array()--------------------
+	func set_Point_Array()->void:
+		if Start_Coordinates_Square!=null and Side_Box!=null:
+			for x in range(Start_Coordinates_Square.x, Start_Coordinates_Square.x + Side_Box):
+				for y in range(Start_Coordinates_Square.y, Start_Coordinates_Square.y + Side_Box):
+					Point_Array.append(Vector2(x, y))
+		else:
+			print("Error Start_Coordinates_Square==null or Side_Box==null")
+#---------------------------------------------
+
+#--------set_Point_Array()--------------------
+	func set_Center_Square()->void:
+		if Start_Coordinates_Square!=null and Side_Box!=null:
+			Center_Square=Vector2((Start_Coordinates_Square.x+Side_Box/2),(Start_Coordinates_Square.y+Side_Box/2))
+
+		else:
+			print("Error Start_Coordinates_Square==null or Side_Box==null")
+#---------------------------------------------
+
+#--------set_Point_Array()--------------------
+	func get_Center_Square()->Vector2:
+		return Center_Square
+		
+#---------------------------------------------
+
+#--------get_Point_Array()--------------------
+	func get_Point_Array():
+		if Point_Array!=null:
+			return Point_Array
+		else:
+			return null
+			print("Errror Point_Array==null")
+#---------------------------------------------
+
+
+#--------------------------------------------------------------
+func set_Array_Of_Squares()->void:
+	if _name_Figure=="Box":
+		box()
+	elif _name_Figure=="Circle":
+		Circle()
+	else:
+		print("Error not figure")
+
+func get_Array_Of_Squares()->Array:
+	return Array_Of_Squares
+
+
+
+func box()->void:
+	if Start_Coordinates!=null and Length!=null and Height!=null:
+		for y in range(Start_Coordinates.y, Start_Coordinates.y + Length,Side):
+			for x in range(Start_Coordinates.x, Start_Coordinates.x + Height,Side):
+				Array_Of_Squares.append(Square.new(Vector2(x,y),Side))
+	else:
+		print("Error Start_Coordinates==null or Length==null or Height==null")
+		
+		
+func Circle()->void:
+	if Start_Coordinates!=null and Length!=null and Height:
+		Radius=Length/2
+		var min_d:float
+		var Center_Box=Vector2((Length/2),(Length/2))
+		for y in range(Center_Box.y-Radius, Center_Box.y + Radius,Side):
+			for x in range(Center_Box.x-Radius, Center_Box.x + Radius,Side):
+				Array_Of_Squares.append(Square.new(Vector2(x,y),Side))
+	
+		pass
+	else:
+		print("Error Start_Coordinates==null or Length==null or Height==null or Radius==0.0")
+		
+
+func get_Center_Circle()->Vector2:
+	if Array_Of_Squares!=null:
+		return Array_Of_Squares[0].get_Center_Square()*int(sqrt(Array_Of_Squares.size()))
+	else:return Vector2(0,0)
